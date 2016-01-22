@@ -164,10 +164,8 @@ public class RemoteGDBDebuggerPage extends GDBDebuggerPage {
     private Boolean createTabitemCOMAshlingBool = false;
     private Boolean createTabItemCustomGdbBool=false;
 
-    private static final String projectAttribute = "org.eclipse.cdt.launch.PROJECT_ATTR";
-    private String projectName = "";
-    private boolean useTcf = false;
-
+    private static final String projectNameAttribute = "org.eclipse.cdt.launch.PROJECT_ATTR";
+    private boolean tcfUsedByCompiler = false;
 
     protected Label nSIMpropslabel;
 
@@ -351,7 +349,6 @@ public class RemoteGDBDebuggerPage extends GDBDebuggerPage {
             }
 
             fGDBCommandText.setText(gdb_path);
-            projectName = configuration.getAttribute(projectAttribute, "");
 
             openocd_bin_path = configuration.getAttribute(
                     LaunchConfigurationConstants.ATTR_DEBUGGER_OPENOCD_BIN_PATH, default_oocd_bin);
@@ -421,8 +418,8 @@ public class RemoteGDBDebuggerPage extends GDBDebuggerPage {
 
             nSIMpropsfiles_last = configuration.getAttribute(
                     LaunchConfigurationConstants.ATTR_NSIM_PROP_FILE, "");
-            nSIMUseSameTcfSelected = configuration.getAttribute(
-                    LaunchConfigurationConstants.ATTR_NSIM_USE_SAME_TCF_AS_COMPILER, false);
+            nSIMUseSameTcfSelected = Boolean.parseBoolean(configuration.getAttribute(
+                    LaunchConfigurationConstants.ATTR_NSIM_USE_SAME_TCF_AS_COMPILER, "false"));
 
             nSIMtcffiles_last = configuration.getAttribute(
                     LaunchConfigurationConstants.ATTR_NSIM_TCF_FILE, "");
@@ -562,7 +559,7 @@ public class RemoteGDBDebuggerPage extends GDBDebuggerPage {
         configuration.setAttribute(LaunchConfigurationConstants.ATTR_NSIM_PROP_FILE,
                 nSIMpropsfiles_last);
         configuration.setAttribute(LaunchConfigurationConstants.ATTR_NSIM_USE_SAME_TCF_AS_COMPILER,
-                nSIMUseSameTcfSelected);
+                ((Boolean)nSIMUseSameTcfSelected).toString());
         configuration.setAttribute(LaunchConfigurationConstants.ATTR_NSIM_TCF_FILE,
                 nSIMtcffiles_last);
         if (groupGenericGDBServer != null && !groupGenericGDBServer.isDisposed()) {
@@ -1043,7 +1040,7 @@ public class RemoteGDBDebuggerPage extends GDBDebuggerPage {
                 if (fLaunchtcfButton.getSelection()) {
                     if (nSIMUseSameTcfSelected) {
                         try {
-                            String projectName = config.getAttribute(projectAttribute, "");
+                            String projectName = config.getAttribute(projectNameAttribute, "");
                             if (projectName.isEmpty()) {
                                 setErrorMessage("Can not get TCF from project build settings: project not specified");
                                 return false;
@@ -1052,7 +1049,7 @@ public class RemoteGDBDebuggerPage extends GDBDebuggerPage {
                         } catch (CoreException e) {
                             e.printStackTrace();
                         }
-                        if (!useTcf) {
+                        if (!tcfUsedByCompiler) {
                             setErrorMessage("TCF is not used for building the project");
                             return false;
                         }
@@ -1608,14 +1605,14 @@ public class RemoteGDBDebuggerPage extends GDBDebuggerPage {
             for (IOption option : options) {
                 String optionId = option.getBaseId();
                 if (optionId.contains(".tcf")) {
-                    useTcf =  (Boolean)option.getValue();
+                    tcfUsedByCompiler =  (Boolean)option.getValue();
                 }
                 if (option.getBaseId().contains(".filefortcf")) {
                     tcfPath = option.getValue().toString();
                 }
             }
         }
-        return useTcf ? tcfPath : "";
+        return tcfUsedByCompiler ? tcfPath : "";
     }
 
     /*

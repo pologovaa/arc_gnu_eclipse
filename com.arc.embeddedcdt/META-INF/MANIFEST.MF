@@ -45,4 +45,5 @@ Bundle-NativeCode: lib/linux/x86/librxtxSerial.so; osname=Linux; processor=x86,
  *
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: com.ibm.icu.text
+Import-Package: com.ibm.icu.text,
+ org.eclipse.cdt.managedbuilder.core

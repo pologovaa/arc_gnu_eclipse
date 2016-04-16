@@ -31,10 +31,10 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.arc.cdt.toolchain.ArcCpu;
 import com.arc.cdt.toolchain.IOptionEnablementManager;
-import com.arc.cdt.toolchain.OptionEnablementManager;
+import com.arc.cdt.toolchain.ValueSynchronizationManager;
 import com.arc.cdt.toolchain.tcf.TcfContent;
 
-public class ArcOptionEnablementManager extends OptionEnablementManager {
+public class ArcOptionEnablementManager extends ValueSynchronizationManager {
 
     private static final String TCF_OPTION_ID = "org.eclipse.cdt.cross.arc.gnu.base.option.target.tcf";
     private static final String TCF_FILE_OPTION_ID = "org.eclipse.cdt.cross.arc.gnu.base.option.target.filefortcf";

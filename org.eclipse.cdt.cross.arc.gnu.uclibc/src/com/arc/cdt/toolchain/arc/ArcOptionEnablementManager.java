@@ -18,9 +18,9 @@ import java.util.Set;
 
 import com.arc.cdt.toolchain.AbstractOptionEnablementManager;
 import com.arc.cdt.toolchain.IOptionEnablementManager;
-import com.arc.cdt.toolchain.OptionEnablementManager;
+import com.arc.cdt.toolchain.ValueSynchronizationManager;
 
-public class ArcOptionEnablementManager extends OptionEnablementManager {
+public class ArcOptionEnablementManager extends ValueSynchronizationManager {
 
     private static String ARCV2EM_DISABLED[] = {
     	         

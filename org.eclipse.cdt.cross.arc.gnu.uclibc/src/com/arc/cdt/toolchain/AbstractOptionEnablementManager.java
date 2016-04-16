@@ -46,7 +46,7 @@ public abstract class AbstractOptionEnablementManager implements IOptionEnableme
     
     private IToolChain mLastToolChain;
 
-    private transient boolean initializing = false;
+    protected transient boolean initializing = false;
     
     private boolean clangBased = false;
 

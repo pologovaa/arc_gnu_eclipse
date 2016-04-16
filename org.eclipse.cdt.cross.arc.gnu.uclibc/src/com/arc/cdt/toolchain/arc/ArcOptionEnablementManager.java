@@ -22,8 +22,6 @@ import com.arc.cdt.toolchain.OptionEnablementManager;
 
 public class ArcOptionEnablementManager extends OptionEnablementManager {
 
-    private static final AbstractOptionEnablementManager EMGR = new OptionEnablementManager();
-   
     private static String ARCV2EM_DISABLED[] = {
     	         
             "org.eclipse.cdt.cross.arc.gnu.linux.option.target.ea",//Customized for ARC GNU ea  
@@ -81,17 +79,7 @@ public class ArcOptionEnablementManager extends OptionEnablementManager {
     
     public ArcOptionEnablementManager() {
         addObserver(new Observer());
-        
-        AbstractOptionEnablementManager generalOptionManager = EMGR;
-        generalOptionManager.addObserver(new IObserver(){
-
-            public void onOptionValueChanged (IOptionEnablementManager mgr, String optionId) {
-            }
-            public void onOptionVisiblementChanged (IOptionEnablementManager mgr, String optionId) {
-            }
-            public void onOptionEnablementChanged (IOptionEnablementManager mgr, String optionID) {
-                // TODO Auto-generated method stub               
-            }});
+       
     }
   
     class Observer implements IOptionEnablementManager.IObserver {

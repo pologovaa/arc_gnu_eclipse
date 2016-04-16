@@ -22,7 +22,7 @@ import com.arc.cdt.toolchain.OptionEnablementManager;
 
 public class ArcOptionEnablementManager extends OptionEnablementManager {
 
-       
+    private static final AbstractOptionEnablementManager EMGR = new OptionEnablementManager();
    
     private static String ARCV2EM_DISABLED[] = {
     	         
@@ -82,7 +82,7 @@ public class ArcOptionEnablementManager extends OptionEnablementManager {
     public ArcOptionEnablementManager() {
         addObserver(new Observer());
         
-        AbstractOptionEnablementManager generalOptionManager = com.arc.cdt.toolchain.ApplicabilityCalculator.getOptionEnablementManager();
+        AbstractOptionEnablementManager generalOptionManager = EMGR;
         generalOptionManager.addObserver(new IObserver(){
 
             public void onOptionValueChanged (IOptionEnablementManager mgr, String optionId) {

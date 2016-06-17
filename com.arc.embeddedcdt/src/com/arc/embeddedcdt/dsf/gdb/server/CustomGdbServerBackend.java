@@ -10,6 +10,8 @@
 
 package com.arc.embeddedcdt.dsf.gdb.server;
 
+import java.io.File;
+
 import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
@@ -33,6 +35,11 @@ public class CustomGdbServerBackend extends GdbServerBackend {
     @Override
     public String getProcessLabel() {
         return "Custom GDBserver";
+    }
+
+    @Override
+    public File getWorkingDirectory() {
+        return null;
     }
 
 }

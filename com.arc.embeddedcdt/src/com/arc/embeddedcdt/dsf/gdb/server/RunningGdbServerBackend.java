@@ -10,6 +10,8 @@
 
 package com.arc.embeddedcdt.dsf.gdb.server;
 
+import java.io.File;
+
 import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
@@ -41,4 +43,10 @@ public class RunningGdbServerBackend extends GdbServerBackend {
     protected String getHostAddress() {
         return Configuration.getHostAddress(launchConfiguration);
     }
+
+    @Override
+    public File getWorkingDirectory() {
+        return null;
+    }
+
 }

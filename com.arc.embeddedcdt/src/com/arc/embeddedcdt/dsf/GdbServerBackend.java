@@ -10,15 +10,22 @@
 
 package com.arc.embeddedcdt.dsf;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Hashtable;
 
+import org.eclipse.cdt.core.parser.util.StringUtil;
 import org.eclipse.cdt.dsf.concurrent.RequestMonitor;
+import org.eclipse.cdt.dsf.gdb.launching.LaunchUtils;
 import org.eclipse.cdt.dsf.gdb.service.GDBBackend;
 import org.eclipse.cdt.dsf.gdb.service.SessionType;
 import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.cdt.utils.CommandLineUtil;
+import org.eclipse.cdt.utils.spawner.ProcessFactory;
 import org.eclipse.cdt.utils.spawner.Spawner;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.osgi.framework.BundleContext;
 
@@ -52,6 +59,8 @@ public abstract class GdbServerBackend extends GDBBackend {
         return LaunchConfigurationConstants.DEFAULT_GDB_HOST;
     }
 
+    public abstract File getWorkingDirectory();
+
     public GdbServerBackend(DsfSession session, ILaunchConfiguration launchConfiguration) {
         super(session, launchConfiguration);
         this.launchConfiguration = launchConfiguration;
@@ -71,12 +80,24 @@ public abstract class GdbServerBackend extends GDBBackend {
             return;
         }
         try {
-            fProcess = launchGDBProcess(getCommandLineArray());
+            fProcess = launchGDBProcess(getCommandLineArray(), getWorkingDirectory());
         } catch (CoreException e) {
             e.printStackTrace();
         } finally {
             requestMonitor.done();
         }
+    }
+
+    private Process launchGDBProcess(String[] cmdArray, File workingDir) throws CoreException {
+        Process proc = null;
+        try {
+            proc = ProcessFactory.getFactory().exec(cmdArray,
+                    LaunchUtils.getLaunchEnvironment(launchConfiguration), workingDir);
+        } catch (IOException e) {
+            String message = "Error while launching command: " + StringUtil.join(cmdArray, " ");
+            throw new CoreException(new Status(IStatus.ERROR, LaunchPlugin.PLUGIN_ID, -1, message, e));
+        }
+        return proc;
     }
 
     @Override

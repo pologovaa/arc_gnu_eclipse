@@ -51,4 +51,9 @@ public class OpenOcdBackend extends GdbServerBackend {
         return "OpenOCD";
     }
 
+    @Override
+    public File getWorkingDirectory() {
+        return null;
+    }
+
 }

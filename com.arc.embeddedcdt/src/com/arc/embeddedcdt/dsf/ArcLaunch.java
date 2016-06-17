@@ -32,15 +32,18 @@ public class ArcLaunch extends GdbLaunch {
     }
 
     public void initializeServerConsole() throws CoreException {
-        IProcess newProcess = addServerProcess("GDB Server");
-        newProcess.setAttribute(IProcess.ATTR_CMDLINE, "openOCD");
-    }
-
-    public IProcess addServerProcess(String label) throws CoreException {
-        IProcess newProcess = null;
         final DsfServicesTracker tracker = new DsfServicesTracker(LaunchPlugin.getBundleContext(),
                 getSession().getId());
-        GdbServerBackend backend = (GdbServerBackend) tracker.getService(GdbServerBackend.class);
+        GdbServerBackend serverBackend = tracker.getService(GdbServerBackend.class);
+        tracker.dispose();
+        if (serverBackend.doLaunchProcess()) {
+            IProcess newProcess = addServerProcess(serverBackend);
+            newProcess.setAttribute(IProcess.ATTR_CMDLINE, serverBackend.getCommandLine());
+        }
+    }
+
+    public IProcess addServerProcess(GdbServerBackend backend) throws CoreException {
+        IProcess newProcess = null;
         Process serverProc = null;
         if (backend != null) {
             serverProc = backend.getProcess();
@@ -49,9 +52,8 @@ public class ArcLaunch extends GdbLaunch {
         attributes.put(IGdbDebugConstants.PROCESS_TYPE_CREATION_ATTR,
                 IGdbDebugConstants.GDB_PROCESS_CREATION_VALUE);
         if (serverProc != null) {
-            newProcess = DebugPlugin.newProcess(this, serverProc, label, attributes);
+            newProcess = DebugPlugin.newProcess(this, serverProc, backend.getProcessLabel(), attributes);
         }
-        tracker.dispose();
         return newProcess;
     }
 }

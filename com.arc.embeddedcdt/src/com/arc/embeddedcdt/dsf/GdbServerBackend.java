@@ -16,24 +16,45 @@ import org.eclipse.cdt.dsf.concurrent.RequestMonitor;
 import org.eclipse.cdt.dsf.gdb.service.GDBBackend;
 import org.eclipse.cdt.dsf.gdb.service.SessionType;
 import org.eclipse.cdt.dsf.service.DsfSession;
+import org.eclipse.cdt.utils.CommandLineUtil;
 import org.eclipse.cdt.utils.spawner.Spawner;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.osgi.framework.BundleContext;
 
+import com.arc.embeddedcdt.LaunchConfigurationConstants;
 import com.arc.embeddedcdt.LaunchPlugin;
+import com.arc.embeddedcdt.dsf.utils.Configuration;
 
-public class GdbServerBackend extends GDBBackend {
+public abstract class GdbServerBackend extends GDBBackend {
 
     private Process fProcess;
+    protected ILaunchConfiguration launchConfiguration;
 
-    private String[] commandLineArray = new String[] {
-            "/home/apologo/2016.03-rc1/ide_linux/bin/openocd", "-d0", "-c", "gdb_port 49105",
-            "-f", "/home/apologo/2016.03-rc1/ide_linux/share/openocd/scripts/board/snps_em_sk_v2.1.cfg",
-            "-s", "/home/apologo/2016.03-rc1/ide_linux/share/openocd/scripts/" };
+    public String[] getCommandLineArray() {
+        return CommandLineUtil.argumentsToArray(getCommandLine());
+    }
+
+    public abstract String getCommandLine();
+
+    public abstract String getProcessLabel();
+
+    public boolean doLaunchProcess() {
+        return true;
+    }
+
+    public String getCommandToConnect() {
+        return String.format("target remote %s:%s\nload\n", getHostAddress(),
+                Configuration.getGdbServerPort(launchConfiguration));
+    }
+
+    protected String getHostAddress() {
+        return LaunchConfigurationConstants.DEFAULT_GDB_HOST;
+    }
 
     public GdbServerBackend(DsfSession session, ILaunchConfiguration launchConfiguration) {
         super(session, launchConfiguration);
+        this.launchConfiguration = launchConfiguration;
     }
 
     @Override
@@ -45,13 +66,17 @@ public class GdbServerBackend extends GDBBackend {
     public void initialize(final RequestMonitor requestMonitor) {
         register( new String[]{ GdbServerBackend.class.getName() },
             new Hashtable<String,String>() );
+        if (!doLaunchProcess()) {
+            requestMonitor.done();
+            return;
+        }
         try {
-            fProcess = launchGDBProcess(commandLineArray);
+            fProcess = launchGDBProcess(getCommandLineArray());
         } catch (CoreException e) {
             e.printStackTrace();
+        } finally {
             requestMonitor.done();
         }
-        requestMonitor.done();
     }
 
     @Override

@@ -22,6 +22,8 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.ISourceLocator;
 
+import com.arc.embeddedcdt.dsf.utils.DebugUtils;
+
 public class ArcLaunchDelegate extends GdbLaunchDelegate {
 
     @Override
@@ -32,7 +34,7 @@ public class ArcLaunchDelegate extends GdbLaunchDelegate {
 
     protected GdbLaunch createGdbLaunch(ILaunchConfiguration configuration, String mode,
             ISourceLocator locator) throws CoreException {
-        // TODO: check if debug session already started
+        DebugUtils.checkLaunchConfigurationStarted(configuration);
         return new ArcLaunch(configuration, mode, locator);
     }
 

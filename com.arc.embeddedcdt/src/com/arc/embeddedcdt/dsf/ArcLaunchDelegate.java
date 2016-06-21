@@ -17,12 +17,14 @@ import org.eclipse.cdt.dsf.gdb.launching.LaunchMessages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.ISourceLocator;
 
 import com.arc.embeddedcdt.dsf.utils.DebugUtils;
+import com.arc.embeddedcdt.launch.LaunchTerminator;
 
 public class ArcLaunchDelegate extends GdbLaunchDelegate {
 
@@ -35,6 +37,7 @@ public class ArcLaunchDelegate extends GdbLaunchDelegate {
     protected GdbLaunch createGdbLaunch(ILaunchConfiguration configuration, String mode,
             ISourceLocator locator) throws CoreException {
         DebugUtils.checkLaunchConfigurationStarted(configuration);
+        DebugPlugin.getDefault().addDebugEventListener(new LaunchTerminator());
         return new ArcLaunch(configuration, mode, locator);
     }
 

@@ -10,6 +10,7 @@
 
 package com.arc.embeddedcdt.dsf;
 
+import org.eclipse.cdt.dsf.debug.service.IDsfDebugServicesFactory;
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate;
 import org.eclipse.cdt.dsf.gdb.launching.LaunchMessages;
 import org.eclipse.core.runtime.CoreException;
@@ -20,6 +21,12 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 
 public class ArcLaunchDelegate extends GdbLaunchDelegate {
+
+    @Override
+    protected IDsfDebugServicesFactory newServiceFactory(ILaunchConfiguration config,
+            String version) {
+        return new ArcDebugServicesFactory(version);
+    }
 
     @Override
     public void launch(ILaunchConfiguration config, String mode, ILaunch launch,

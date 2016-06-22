@@ -280,7 +280,6 @@ public class Launch extends AbstractCLaunchDelegate implements ICDIEventListener
                         ICDTLaunchConfigurationConstants.DEBUGGER_MODE_RUN);
 
                 if (debugMode.equals(ICDTLaunchConfigurationConstants.DEBUGGER_MODE_RUN)) {
-                    LaunchFrontend l = new LaunchFrontend(launch);
                     prepareSession();
 
                     // Start GDB first. This is required to ensure that if gdbserver
@@ -288,7 +287,7 @@ public class Launch extends AbstractCLaunchDelegate implements ICDIEventListener
                     // kill GDB when it is trying to execute script commands.
                     if (exeFile != null) {
                         dsession = ((EmbeddedGDBCDIDebugger) debugConfig.createDebugger())
-                                .createDebuggerSession(this, l, exeFile,
+                                .createDebuggerSession(this, launch, exeFile,
                                         new SubProgressMonitor(monitor, 8));
                     } else {
                         /* no executable for session */
@@ -395,8 +394,6 @@ public class Launch extends AbstractCLaunchDelegate implements ICDIEventListener
                                     configuration, mode);
                         monitor.subTask("Query target state");
                         queryTargetState(dtargets);
-                        // This will make the GDB console frontmost.
-                        l.addStragglers();
 
                         if (eventManager != null)
                             eventManager.allowProcessingEvents(prevstateAllowEvents);

@@ -89,7 +89,7 @@ import com.arc.embeddedcdt.proxy.cdt.LaunchMessages;
 import gnu.io.CommPortIdentifier;
 
 @SuppressWarnings("restriction")
-public abstract class Launch extends AbstractCLaunchDelegate implements ICDIEventListener {
+public class Launch extends AbstractCLaunchDelegate implements ICDIEventListener {
     private final static class RunCommand implements Runnable {
         private final CLICommand cli;
         private final MISession miSession;
@@ -120,7 +120,9 @@ public abstract class Launch extends AbstractCLaunchDelegate implements ICDIEven
     private ICDISession dsession;
     private ILaunchConfiguration launch_config;
 
-    abstract public String getSourcePathSeperator();
+    public String getSourcePathSeperator() {
+        return File.pathSeparator;
+    }
 
     public Launch() {
         super();
@@ -887,7 +889,9 @@ public abstract class Launch extends AbstractCLaunchDelegate implements ICDIEven
     /**
      * Translate Windows speak to host GDB speak(e.g. CygWin or MinGW).
      */
-    abstract public String fixPath(String line);
+    public String fixPath(String line) {
+        return line;
+    }
 
     @SuppressWarnings("deprecation")
     protected IPath verifyProgramPath(ILaunchConfiguration config, ICProject project)

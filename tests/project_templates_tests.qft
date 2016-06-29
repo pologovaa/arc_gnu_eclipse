@@ -2,25 +2,25 @@
 <!DOCTYPE RootStep>
 <RootStep id="_0" name="root" version="4.0.11">
   <include>qfs.qft</include>
-  <variable name="board"></variable>
-  <variable name="core"></variable>
-  <variable name="gdbServer"></variable>
+  <variable name="board">axs103</variable>
+  <variable name="core">hs36</variable>
+  <variable name="gdbServer">ashling</variable>
   <variable name="toolchain"></variable>
   <variable name="endian"></variable>
-  <variable name="language"/>
-  <variable name="template"/>
-  <variable name="mcpu"/>
-  <variable name="tcf"></variable>
-  <variable name="ignoreProblems"></variable>
-  <variable name="comPort"/>
-  <variable name="mode"></variable>
+  <variable name="language">c</variable>
+  <variable name="template"></variable>
+  <variable name="mcpu"></variable>
+  <variable name="tcf"/>
+  <variable name="ignoreProblems"/>
+  <variable name="comPort">10</variable>
+  <variable name="mode"/>
   <variable name="configuration">Debug</variable>
-  <variable name="workspace"></variable>
-  <variable name="eclipsedir"></variable>
-  <variable name="nsimdrv"></variable>
-  <variable name="openocd"></variable>
-  <variable name="ashlingBinPath"></variable>
-  <variable name="ashlingXmlDir"></variable>
+  <variable name="workspace">C:Users\apologo\workspace1</variable>
+  <variable name="eclipsedir">C:\arc_gnu\eclipse</variable>
+  <variable name="nsimdrv">C:\nSIM_64\bin\nsimdrv.exe</variable>
+  <variable name="openocd">C:\arc_gnu\bin\openocd.exe</variable>
+  <variable name="ashlingBinPath">C:\AshlingOpellaXDforARC\ash-arc-gdb-server.exe</variable>
+  <variable name="ashlingXmlDir">C:\AshlingOpellaXDforARC</variable>
   <variable name="sourceFileDir">src</variable>
   <variable name="sourceFile">src.c</variable>
   <variable name="tcfDir">tcf</variable>
@@ -523,48 +523,48 @@ rc.setLocal("portNum", portNum)</code>
         </IfSequence>
         <CheckStringStep checktype="item" client="$(client)"
                          component="Console.textCDT_Build_Console@make all"
-                         id="_2JRb" raise="true" timeout="1000">
+                         id="_2JRb" raise="true" timeout="10000">
           <text>make all </text>
         </CheckStringStep>
         <CheckStringStep checktype="item" client="$(client)"
                          component="Console.textCDT_Build_Console@$(quote)Building file: ../src/$(projectName).$(extension)$(quote)"
-                         id="_2JRc" raise="true" timeout="1000">
+                         id="_2JRc" raise="true" timeout="5000">
           <text>$(quote)Building file: ../src/$(projectName).$(extension)$(quote)</text>
         </CheckStringStep>
         <CheckStringStep checktype="item" client="$(client)"
                          component="Console.textCDT_Build_Console@$(quote)Invoking: ARC ELF32 GCC $(language) Compiler$(quote)"
-                         id="_2JRd" raise="true" timeout="1000">
+                         id="_2JRd" raise="true" timeout="5000">
           <text>$(quote)Invoking: ARC ELF32 GCC $(language) Compiler$(quote)</text>
         </CheckStringStep>
         <CheckStringStep checktype="item" client="$(client)"
                          component="Console.textCDT_Build_Console@$(quote)Finished building: ../src/$(projectName).$(extension)$(quote)"
-                         id="_2JRe" raise="true" timeout="1000">
+                         id="_2JRe" raise="true" timeout="5000">
           <text>$(quote)Finished building: ../src/$(projectName).$(extension)$(quote)</text>
         </CheckStringStep>
         <CheckStringStep checktype="item" client="$(client)"
                          component="Console.textCDT_Build_Console@$(quote)Building target: $(projectName).elf$(quote)"
-                         id="_2JRf" raise="true" timeout="1000">
+                         id="_2JRf" raise="true" timeout="5000">
           <text>$(quote)Building target: $(projectName).elf$(quote)</text>
         </CheckStringStep>
         <CheckStringStep checktype="item" client="$(client)"
                          component="Console.textCDT_Build_Console@$(quote)Invoking: ARC ELF32 GCC $(language) Linker$(quote)"
-                         id="_2JRg" raise="true" timeout="1000">
+                         id="_2JRg" raise="true" timeout="5000">
           <text>$(quote)Invoking: ARC ELF32 GCC $(language) Linker$(quote)</text>
         </CheckStringStep>
         <CheckStringStep checktype="item" client="$(client)"
                          component="Console.textCDT_Build_Console@$(quote)Finished building target: $(projectName).elf$(quote)"
-                         id="_2JRh" raise="true" timeout="1000">
+                         id="_2JRh" raise="true" timeout="5000">
           <text>$(quote)Finished building target: $(projectName).elf$(quote)</text>
         </CheckStringStep>
         <CheckStringStep checktype="item" client="$(client)"
                          component="Console.textCDT_Build_Console@$(quote)Invoking: ARC ELF32 GNU Print Size$(quote)"
-                         id="_2JRi" raise="true" timeout="1000">
+                         id="_2JRi" raise="true" timeout="5000">
           <text>$(quote)Invoking: ARC ELF32 GNU Print Size$(quote)</text>
         </CheckStringStep>
         <CheckStringStep checktype="item" client="$(client)"
                          component="Console.textCDT_Build_Console@$(quote)Finished building: $(projectName).siz$(quote)"
                          id="_2JRj" local="true" raise="true"
-                         resvarname="success" timeout="1000">
+                         resvarname="success" timeout="5000">
           <text>$(quote)Finished building: $(projectName).siz$(quote)</text>
         </CheckStringStep>
       </Procedure>
@@ -942,11 +942,22 @@ rc.setLocal("portNum", portNum)</code>
     </Package>
     <Package id="_2JBl" name="debugProcess">
       <Procedure id="_2JZB" name="placeBreakpointOnExit">
-        <ProcedureCall id="_2JZH" procedure="qfs.swt.tree.selectNode">
-          <variable name="id">Debug.tree</variable>
-          <variable name="node">/0/1</variable>
-          <variable name="separator">&amp;</variable>
-        </ProcedureCall>
+        <TryStep id="_2JZL">
+          <ProcedureCall id="_2JZH" procedure="qfs.swt.tree.selectNode">
+            <variable name="id">Debug.tree</variable>
+            <variable name="node">/.*/.*arc-elf32-gdb.*</variable>
+            <variable name="separator">%</variable>
+          </ProcedureCall>
+          <CatchSequence exception="ComponentNotFoundException" id="_2JZM"
+                         maxerror="0">
+            <ProcedureCall id="_2JZN" predelay="10000"
+                           procedure="qfs.swt.tree.selectNode">
+              <variable name="id">Debug.tree</variable>
+              <variable name="node">/.*/.*arc-elf32-gdb.*</variable>
+              <variable name="separator">%</variable>
+            </ProcedureCall>
+          </CatchSequence>
+        </TryStep>
         <SelectionEventStep client="$(client)"
                             component="tabfolder-org.eclipse.debug.internal.ui.ConsoleFolderView@Console"
                             event="SELECTION" id="_2JZD"/>
@@ -1227,8 +1238,8 @@ efzYJxs/LF+2YmVZ7eBPGA0/PXHiWDjyfwBnTrKL</binary>
     </Package>
     <Package id="_6l6" name="switchPerspectives">
       <Procedure id="_6lX" name="switchToPerspective">
-        <variable name="id"/>
-        <variable name="name"/>
+        <variable name="id"></variable>
+        <variable name="name"></variable>
         <TryStep id="_6lL">
           <ProcedureCall id="_6lK" procedure="qfs.swt.general.doClick">
             <variable name="id">$(id)</variable>
@@ -2026,7 +2037,7 @@ rc.setLocal("toolchain", toolchain)</code>
         <SelectionEventStep client="$(client)"
                             component="dialogImport_from_directory"
                             detail="${qftest:suite.dir}/$(sourceFileDir)"
-                            event="SELECTION" id="_2JSj"/>
+                            event="SELECTION" id="_2JSj" predelay="1000"/>
         <MouseEventStep clicks="1" client="$(client)"
                         component="fileSystemImportPage1.tableFile_system&amp;0@$(sourceFile)"
                         disabled="true" event="MOUSE_MPRC" id="_2JS+"
